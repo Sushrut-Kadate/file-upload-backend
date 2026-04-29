@@ -26,8 +26,12 @@ public class FileController {
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         DBFile dbFile = dbFileStorageService.storeFile(file);
 
-        return new UploadFileResponse(dbFile.getFileName(), dbFile.getFileUrl(),
-                file.getContentType(), file.getSize());
+        return new UploadFileResponse(
+                dbFile.getFileName(),
+                dbFile.getFileUrl(),
+                file.getContentType(),
+                file.getSize()
+        );
     }
 
     @PostMapping("/uploadMultipleFiles")
@@ -38,14 +42,6 @@ public class FileController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileId}")
-    public ResponseEntity<String> downloadFile(@PathVariable String fileId) {
-        DBFile dbFile = dbFileStorageService.getFile(fileId);
-
-        return ResponseEntity.ok()
-                .body(dbFile.getFileUrl());
-    }
-
     @GetMapping("/files")
     public List<DBFile> getAllFiles() {
         return dbFileStorageService.getAllFiles();
@@ -54,6 +50,6 @@ public class FileController {
     @DeleteMapping("/files/{fileId}")
     public ResponseEntity<String> deleteFile(@PathVariable String fileId) {
         dbFileStorageService.deleteFile(fileId);
-        return ResponseEntity.ok().body("File deleted successfully!");
+        return ResponseEntity.ok("File deleted successfully!");
     }
 }
